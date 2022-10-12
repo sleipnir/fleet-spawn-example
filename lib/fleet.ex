@@ -38,17 +38,16 @@ defmodule Fleet do
       }
 
   """
-  def set_fleet_controller(name, area) do
+  def set_fleet_controller(area) do
     state = %State{
-      id: name,
+      id: "fleet-controller",
       area: area
     }
 
     SpawnSdk.invoke(
-      name,
-      ref: Fleet.Actors.Brain,
+      "fleet-controller",
       system: "spawn-system",
-      command: :init,
+      command: "init",
       payload: state
     )
   end

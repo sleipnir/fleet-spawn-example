@@ -1,11 +1,12 @@
 defmodule Fleet.Actors.Brain do
   use SpawnSdk.Actor,
-    abstract: true,
+    name: "fleet-controller",
     state_type: Fleet.Domain.State,
     deactivate_timeout: 31_536_000_000,
     actions: [
-      :enqueue_delivery,
-      :receive_driver_position
+      :init,
+      :driver_position,
+      :enqueue_delivery
     ],
     timers: [dequeue_delivery: 10_000]
 
@@ -28,19 +29,6 @@ defmodule Fleet.Actors.Brain do
     %Value{}
     |> Value.of(initial_state, initial_state)
     |> Value.reply!()
-  end
-
-  def handle_command({:dequeue_delivery, _request}, %Context{state: state} = ctx)
-      when is_nil(state) do
-    Logger.info(
-      "Fleet Brain Controller Received Dequeue Delivery Event. Context: #{inspect(ctx)}"
-    )
-
-    new_state = %State{}
-
-    Value.of()
-    |> Value.state(new_state)
-    |> Value.noreply!()
   end
 
   def handle_command({:dequeue_delivery, _request}, %Context{state: state} = ctx) do
@@ -86,8 +74,18 @@ defmodule Fleet.Actors.Brain do
 
   @impl true
   def handle_command(
-        {:receive_driver_position, %Driver{position: position} = driver},
-        %Context{state: state} = ctx
+        {:driver_position, %Driver{} = driver},
+        %Context{state: %State{drivers: drivers} = state} = ctx
       ) do
+    Logger.info(
+      "Fleet Brain Controller Received Driver Position Event. Driver: [#{inspect(driver)}] Context: #{inspect(ctx)}"
+    )
+
+    updated_drivers = drivers ++ [driver]
+    new_state = %State{state | drivers: updated_drivers}
+
+    Value.of()
+    |> Value.state(new_state)
+    |> Value.noreply!()
   end
 end

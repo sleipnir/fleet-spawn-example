@@ -12,14 +12,30 @@ defmodule Fleet.Actors.Driver do
 
   require Logger
 
+  @brain_actor "fleet-controller"
+
   @impl true
   def handle_command(
         {:update_position, %Point{} = position},
-        %Context{state: %Driver{id: name} = _state} = ctx
+        %Context{state: %Driver{id: name} = driver} = ctx
       ) do
     Logger.info(
       "Driver [#{name}] Received Update Position Event. Position: [#{inspect(position)}]. Context: #{inspect(ctx)}"
     )
+
+    driver_state = %Driver{driver | position: position}
+
+    invoke(@brain_actor,
+      system: "spawn-system",
+      command: "driver_position",
+      payload: driver_state,
+      async: true
+    )
+
+    Value.of()
+    |> Value.value(driver_state)
+    |> Value.state(driver_state)
+    |> Value.reply!()
   end
 
   def handle_command(
