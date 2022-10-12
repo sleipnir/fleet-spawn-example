@@ -1,6 +1,4 @@
 defmodule Fleet.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
@@ -8,12 +6,16 @@ defmodule Fleet.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: Fleet.Worker.start_link(arg)
-      # {Fleet.Worker, arg}
+      {
+        SpawnSdk.System.Supervisor,
+        system: "spawn-system",
+        actors: [
+          Fleet.Actors.Brain,
+          Fleet.Actors.Driver
+        ]
+      }
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Fleet.Supervisor]
     Supervisor.start_link(children, opts)
   end

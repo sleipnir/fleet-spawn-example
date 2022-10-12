@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package fleet.domain;
+
+import "geometry.proto";
+
+message Item {
+    string id = 1;
+    string name = 2;
+    string descriptions = 3;
+    fleet.domain.Point point = 4;
+    fleet.domain.DeliveryStatus status = 5;
+}
+
+enum DeliveryStatus {
+    UNKNOWN_DELIVERY_STATUS = 0;
+    PICKUP = 1;
+    DELIVERED = 2;
+}
+
+message Delivery {
+    string id = 1;
+    Item itens = 2;
+    DeliveryStatus status = 3;
+}

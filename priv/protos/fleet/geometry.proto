@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package fleet.domain;
+
+message Point {
+    float latitude = 1;
+    float longitude = 2;
+}
+
+message Geometry {
+    repeated Point coordinates = 1;
+}

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package fleet.domain;
+
+import "delivery.proto";
+
+enum OfferStatus {
+    UNKNOWN_STATUS = 0;
+    ACCEPT = 1;
+    REJECT = 2;
+}
+
+message OfferRequest {
+    fleet.domain.Delivery delivery = 1;
+}
+
+message OfferResponse {
+    OfferStatus status = 1;
+    fleet.domain.Delivery delivery = 2;
+}
+

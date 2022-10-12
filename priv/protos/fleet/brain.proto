@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package fleet.domain;
+
+import "driver.proto";
+import "geometry.proto";
+import "delivery.proto";
+
+message State {
+    string id = 1;
+    fleet.domain.Geometry area = 2;
+    repeated fleet.domain.Driver drivers = 3;
+    repeated fleet.domain.Delivery deliveries = 4;
+}

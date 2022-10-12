@@ -3,16 +3,53 @@ defmodule Fleet do
   Documentation for `Fleet`.
   """
 
+  alias SpawnSdk
+
+  alias Fleet.Domain.State
+
   @doc """
-  Hello world.
+  Set the Fleet Controller Brain for specific location.
 
   ## Examples
 
-      iex> Fleet.hello()
-      :world
+      iex>  state = %Fleet.Domain.State{
+              id: "fleet-controller-atibaia",
+              area: %Fleet.Domain.Geometry{
+                coordinates: [%Fleet.Domain.Point{latitude: -23.1171, longitude: -46.5502}]
+              },
+              deliveries: []
+            }
+      iex> Fleet.set_fleet_controller("fleet-controller-atibaia", state)
+      %Fleet.Domain.State{
+        id: "fleet-controller-atibaia",
+        area: %Fleet.Domain.Geometry{
+          coordinates: [
+            %Fleet.Domain.Point{
+              latitude: -23.1171,
+              longitude: -46.5502,
+              __unknown_fields__: []
+            }
+          ],
+          __unknown_fields__: []
+        },
+        drivers: [],
+        deliveries: [],
+        __unknown_fields__: []
+      }
 
   """
-  def hello do
-    :world
+  def set_fleet_controller(name, area) do
+    state = %State{
+      id: name,
+      area: area
+    }
+
+    SpawnSdk.invoke(
+      name,
+      ref: Fleet.Actors.Brain,
+      system: "spawn-system",
+      command: :init,
+      payload: state
+    )
   end
 end
