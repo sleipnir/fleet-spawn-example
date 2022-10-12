@@ -16,7 +16,6 @@ build:
 	mix deps.get && mix compile
 
 test:
-	MIX_ENV=test mix deps.get
 	MIX_ENV=test PROXY_DATABASE_TYPE=$(database) SPAWN_STATESTORE_KEY=3Jnb0hZiHIzHTOih7t2cTEPEpY98Tu1wvQkPfq/XwqE= elixir --name fleet_01@127.0.0.1 -S mix test
 
 run:

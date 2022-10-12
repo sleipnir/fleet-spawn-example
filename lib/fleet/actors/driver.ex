@@ -4,13 +4,30 @@ defmodule Fleet.Actors.Driver do
     state_type: Fleet.Domain.Driver
 
   alias Fleet.Domain.{
+    Driver,
     OfferRequest,
-    OfferResponse
+    OfferResponse,
+    Point
   }
 
   require Logger
 
   @impl true
-  def handle_command({:receive_offer, %OfferRequest{} = _request}, %Context{state: _state} = _ctx) do
+  def handle_command(
+        {:update_position, %Point{} = position},
+        %Context{state: %Driver{id: name} = _state} = ctx
+      ) do
+    Logger.info(
+      "Driver [#{name}] Received Update Position Event. Position: [#{inspect(position)}]. Context: #{inspect(ctx)}"
+    )
+  end
+
+  def handle_command(
+        {:receive_offer, %OfferRequest{} = offer},
+        %Context{state: %Driver{id: name} = _state} = ctx
+      ) do
+    Logger.info(
+      "Driver [#{name}] Received Offer Request Event. Offer: [#{inspect(offer)}]. Context: #{inspect(ctx)}"
+    )
   end
 end

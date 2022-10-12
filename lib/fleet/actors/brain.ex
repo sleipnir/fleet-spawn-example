@@ -23,7 +23,10 @@ defmodule Fleet.Actors.Brain do
 
   @impl true
   def handle_command({:init, %State{} = initial_state}, ctx) do
-    Value.of(initial_state, initial_state)
+    Logger.info("Fleet Brain Controller Received Init Event. Context: #{inspect(ctx)}")
+
+    %Value{}
+    |> Value.of(initial_state, initial_state)
     |> Value.reply!()
   end
 
@@ -53,6 +56,10 @@ defmodule Fleet.Actors.Brain do
   @impl true
   def handle_command({:enqueue_delivery, %Delivery{} = delivery}, %Context{state: state} = ctx)
       when is_nil(state) do
+    Logger.info(
+      "Fleet Brain Controller Received Enqueue Delivery Event. Context: #{inspect(ctx)}"
+    )
+
     new_state = %State{deliveries: [delivery]}
 
     Value.of()
@@ -63,10 +70,14 @@ defmodule Fleet.Actors.Brain do
   @impl true
   def handle_command(
         {:enqueue_delivery, %Delivery{} = delivery},
-        %Context{state: %Fleet.Domain.State{deliveries: deliveries} = state} = ctx
+        %Context{state: %State{deliveries: deliveries} = state} = ctx
       ) do
+    Logger.info(
+      "Fleet Brain Controller Received Enqueue Delivery Event. Context: #{inspect(ctx)}"
+    )
+
     updated_deliveries = deliveries ++ [delivery]
-    new_state = %State{deliveries: updated_deliveries}
+    new_state = %State{state | deliveries: updated_deliveries}
 
     Value.of()
     |> Value.state(new_state)
