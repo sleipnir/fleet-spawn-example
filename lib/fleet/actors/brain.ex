@@ -1,6 +1,7 @@
 defmodule Fleet.Actors.Brain do
   use SpawnSdk.Actor,
     name: "fleet-controller",
+    channel: "fleet-controllers",
     state_type: Fleet.Domain.State,
     deactivate_timeout: 31_536_000_000,
     actions: [
@@ -8,7 +9,7 @@ defmodule Fleet.Actors.Brain do
       :driver_position,
       :enqueue_delivery
     ],
-    timers: [dequeue_delivery: 10_000]
+    timers: [dequeue_delivery: 60_000]
 
   alias Fleet.Domain.{
     Delivery,

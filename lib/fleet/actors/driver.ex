@@ -1,7 +1,13 @@
 defmodule Fleet.Actors.Driver do
   use SpawnSdk.Actor,
     abstract: true,
-    state_type: Fleet.Domain.Driver
+    channel: "drivers",
+    state_type: Fleet.Domain.Driver,
+    actions: [
+      :init,
+      :update_position,
+      :receive_offer
+    ]
 
   alias Fleet.Domain.{
     Driver,
@@ -12,7 +18,7 @@ defmodule Fleet.Actors.Driver do
 
   require Logger
 
-  @brain_actor "fleet-controller"
+  @brain_actor_channel "fleet-controllers"
 
   @impl true
   def handle_command(
@@ -25,16 +31,23 @@ defmodule Fleet.Actors.Driver do
 
     driver_state = %Driver{driver | position: position}
 
-    invoke(@brain_actor,
-      system: "spawn-system",
-      command: "driver_position",
-      payload: driver_state,
-      async: true
+    %Value{}
+    |> Value.of(driver_state, driver_state)
+    |> Value.broadcast(
+      Broadcast.to(
+        @brain_actor_channel,
+        "driver_position",
+        driver_state
+      )
     )
+    |> Value.reply!()
+  end
 
-    Value.of()
-    |> Value.value(driver_state)
-    |> Value.state(driver_state)
+  def handle_command({:init, %Driver{} = initial_state}, ctx) do
+    Logger.info("Driver Received Init Event. Context: #{inspect(ctx)}")
+
+    %Value{}
+    |> Value.of(initial_state, initial_state)
     |> Value.reply!()
   end
 

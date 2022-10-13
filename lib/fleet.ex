@@ -5,7 +5,11 @@ defmodule Fleet do
 
   alias SpawnSdk
 
-  alias Fleet.Domain.State
+  alias Fleet.Domain.{
+    Driver,
+    Point,
+    State
+  }
 
   @doc """
   Set the Fleet Controller Brain for specific location.
@@ -49,6 +53,26 @@ defmodule Fleet do
       system: "spawn-system",
       command: "init",
       payload: state
+    )
+  end
+
+  def init_driver(driver) do
+    SpawnSdk.invoke(
+      driver.id,
+      ref: Fleet.Actors.Driver,
+      system: "spawn-system",
+      command: "init",
+      payload: driver
+    )
+  end
+
+  def update_driver_position(driver_name, position) do
+    SpawnSdk.invoke(
+      driver_name,
+      ref: Fleet.Actors.Driver,
+      system: "spawn-system",
+      command: "update_position",
+      payload: position
     )
   end
 end

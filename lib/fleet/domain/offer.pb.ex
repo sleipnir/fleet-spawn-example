@@ -33,10 +33,11 @@ defmodule Fleet.Domain.OfferStatus do
     }
   end
 
-  field :UNKNOWN_STATUS, 0
-  field :ACCEPT, 1
-  field :REJECT, 2
+  field(:UNKNOWN_STATUS, 0)
+  field(:ACCEPT, 1)
+  field(:REJECT, 2)
 end
+
 defmodule Fleet.Domain.OfferRequest do
   @moduledoc false
   use Protobuf, protoc_gen_elixir_version: "0.10.0", syntax: :proto3
@@ -73,8 +74,9 @@ defmodule Fleet.Domain.OfferRequest do
     }
   end
 
-  field :delivery, 1, type: Fleet.Domain.Delivery
+  field(:delivery, 1, type: Fleet.Domain.Delivery)
 end
+
 defmodule Fleet.Domain.OfferResponse do
   @moduledoc false
   use Protobuf, protoc_gen_elixir_version: "0.10.0", syntax: :proto3
@@ -125,6 +127,6 @@ defmodule Fleet.Domain.OfferResponse do
     }
   end
 
-  field :status, 1, type: Fleet.Domain.OfferStatus, enum: true
-  field :delivery, 2, type: Fleet.Domain.Delivery
+  field(:status, 1, type: Fleet.Domain.OfferStatus, enum: true)
+  field(:delivery, 2, type: Fleet.Domain.Delivery)
 end

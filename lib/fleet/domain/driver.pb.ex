@@ -48,9 +48,10 @@ defmodule Fleet.Domain.Container do
     }
   end
 
-  field :limit, 1, type: :int32
-  field :deliveries, 2, repeated: true, type: Fleet.Domain.Delivery
+  field(:limit, 1, type: :int32)
+  field(:deliveries, 2, repeated: true, type: Fleet.Domain.Delivery)
 end
+
 defmodule Fleet.Domain.Driver do
   @moduledoc false
   use Protobuf, protoc_gen_elixir_version: "0.10.0", syntax: :proto3
@@ -115,7 +116,7 @@ defmodule Fleet.Domain.Driver do
     }
   end
 
-  field :id, 1, type: :string
-  field :container, 2, type: Fleet.Domain.Container
-  field :position, 3, type: Fleet.Domain.Point
+  field(:id, 1, type: :string)
+  field(:container, 2, type: Fleet.Domain.Container)
+  field(:position, 3, type: Fleet.Domain.Point)
 end

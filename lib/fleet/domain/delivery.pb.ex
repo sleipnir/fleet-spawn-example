@@ -33,10 +33,11 @@ defmodule Fleet.Domain.DeliveryStatus do
     }
   end
 
-  field :UNKNOWN_DELIVERY_STATUS, 0
-  field :PICKUP, 1
-  field :DELIVERED, 2
+  field(:UNKNOWN_DELIVERY_STATUS, 0)
+  field(:PICKUP, 1)
+  field(:DELIVERED, 2)
 end
+
 defmodule Fleet.Domain.Item do
   @moduledoc false
   use Protobuf, protoc_gen_elixir_version: "0.10.0", syntax: :proto3
@@ -129,12 +130,13 @@ defmodule Fleet.Domain.Item do
     }
   end
 
-  field :id, 1, type: :string
-  field :name, 2, type: :string
-  field :descriptions, 3, type: :string
-  field :point, 4, type: Fleet.Domain.Point
-  field :status, 5, type: Fleet.Domain.DeliveryStatus, enum: true
+  field(:id, 1, type: :string)
+  field(:name, 2, type: :string)
+  field(:descriptions, 3, type: :string)
+  field(:point, 4, type: Fleet.Domain.Point)
+  field(:status, 5, type: Fleet.Domain.DeliveryStatus, enum: true)
 end
+
 defmodule Fleet.Domain.Delivery do
   @moduledoc false
   use Protobuf, protoc_gen_elixir_version: "0.10.0", syntax: :proto3
@@ -199,7 +201,7 @@ defmodule Fleet.Domain.Delivery do
     }
   end
 
-  field :id, 1, type: :string
-  field :itens, 2, type: Fleet.Domain.Item
-  field :status, 3, type: Fleet.Domain.DeliveryStatus, enum: true
+  field(:id, 1, type: :string)
+  field(:itens, 2, type: Fleet.Domain.Item)
+  field(:status, 3, type: Fleet.Domain.DeliveryStatus, enum: true)
 end

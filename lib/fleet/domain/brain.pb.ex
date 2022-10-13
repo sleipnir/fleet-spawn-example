@@ -76,8 +76,8 @@ defmodule Fleet.Domain.State do
     }
   end
 
-  field :id, 1, type: :string
-  field :area, 2, type: Fleet.Domain.Geometry
-  field :drivers, 3, repeated: true, type: Fleet.Domain.Driver
-  field :deliveries, 4, repeated: true, type: Fleet.Domain.Delivery
+  field(:id, 1, type: :string)
+  field(:area, 2, type: Fleet.Domain.Geometry)
+  field(:drivers, 3, repeated: true, type: Fleet.Domain.Driver)
+  field(:deliveries, 4, repeated: true, type: Fleet.Domain.Delivery)
 end

@@ -48,9 +48,10 @@ defmodule Fleet.Domain.Point do
     }
   end
 
-  field :latitude, 1, type: :float
-  field :longitude, 2, type: :float
+  field(:latitude, 1, type: :float)
+  field(:longitude, 2, type: :float)
 end
+
 defmodule Fleet.Domain.Geometry do
   @moduledoc false
   use Protobuf, protoc_gen_elixir_version: "0.10.0", syntax: :proto3
@@ -87,5 +88,5 @@ defmodule Fleet.Domain.Geometry do
     }
   end
 
-  field :coordinates, 1, repeated: true, type: Fleet.Domain.Point
+  field(:coordinates, 1, repeated: true, type: Fleet.Domain.Point)
 end
