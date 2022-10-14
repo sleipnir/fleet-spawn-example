@@ -1,9 +1,0 @@
-{application,metrics_endpoint,
-             [{applications,[kernel,stdlib,elixir,logger]},
-              {description,"metrics_endpoint"},
-              {modules,['Elixir.MetricsEndpoint',
-                        'Elixir.MetricsEndpoint.Exporter',
-                        'Elixir.MetricsEndpoint.PrometheusInstrumenter',
-                        'Elixir.MetricsEndpoint.PrometheusPipeline']},
-              {registered,[]},
-              {vsn,"0.1.0"}]}.
