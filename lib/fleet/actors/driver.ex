@@ -20,11 +20,10 @@ defmodule Fleet.Actors.Driver do
 
   @brain_actor_channel "fleet-controllers"
 
-  @impl true
-  def handle_command(
-        {:update_position, %Point{} = position},
-        %Context{state: %Driver{id: name} = driver} = ctx
-      ) do
+  defact update_position(
+           %Point{} = position,
+           %Context{state: %Driver{id: name} = driver} = ctx
+         ) do
     Logger.info(
       "Driver [#{name}] Received Update Position Event. Position: [#{inspect(position)}]. Context: #{inspect(ctx)}"
     )
@@ -43,7 +42,7 @@ defmodule Fleet.Actors.Driver do
     |> Value.reply!()
   end
 
-  def handle_command({:init, %Driver{} = initial_state}, ctx) do
+  defact init(%Driver{} = initial_state, ctx) do
     Logger.info("Driver Received Init Event. Context: #{inspect(ctx)}")
 
     %Value{}
@@ -51,10 +50,10 @@ defmodule Fleet.Actors.Driver do
     |> Value.reply!()
   end
 
-  def handle_command(
-        {:receive_offer, %OfferRequest{} = offer},
-        %Context{state: %Driver{id: name} = _state} = ctx
-      ) do
+  defact receive_offer(
+           %OfferRequest{} = offer,
+           %Context{state: %Driver{id: name} = _state} = ctx
+         ) do
     Logger.info(
       "Driver [#{name}] Received Offer Request Event. Offer: [#{inspect(offer)}]. Context: #{inspect(ctx)}"
     )
