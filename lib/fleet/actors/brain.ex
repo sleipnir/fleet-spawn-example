@@ -3,13 +3,7 @@ defmodule Fleet.Actors.Brain do
     name: "fleet-controller",
     channel: "fleet-controllers",
     state_type: Fleet.Domain.State,
-    deactivate_timeout: 31_536_000_000,
-    actions: [
-      :init,
-      :driver_position,
-      :enqueue_delivery
-    ],
-    timers: [dequeue_delivery: 60_000]
+    deactivate_timeout: 31_536_000_000
 
   alias Fleet.Domain.{
     Delivery,
@@ -23,8 +17,7 @@ defmodule Fleet.Actors.Brain do
 
   require Logger
 
-  @impl true
-  def handle_command({:init, %State{} = initial_state}, ctx) do
+  defact init(%State{} = initial_state, ctx) do
     Logger.info("Fleet Brain Controller Received Init Event. Context: #{inspect(ctx)}")
 
     %Value{}
@@ -32,7 +25,8 @@ defmodule Fleet.Actors.Brain do
     |> Value.reply!()
   end
 
-  def handle_command({:dequeue_delivery, _request}, %Context{state: state} = ctx) do
+  @set_timer 60_000
+  defact dequeue_delivery(_request, %Context{state: state} = ctx) do
     Logger.info(
       "Fleet Brain Controller Received Dequeue Delivery Event. Context: #{inspect(ctx)}"
     )
@@ -42,9 +36,8 @@ defmodule Fleet.Actors.Brain do
     |> Value.noreply!()
   end
 
-  @impl true
-  def handle_command({:enqueue_delivery, %Delivery{} = delivery}, %Context{state: state} = ctx)
-      when is_nil(state) do
+  defact enqueue_delivery(%Delivery{} = delivery, %Context{state: state} = ctx)
+         when is_nil(state) do
     Logger.info(
       "Fleet Brain Controller Received Enqueue Delivery Event. Context: #{inspect(ctx)}"
     )
@@ -56,11 +49,10 @@ defmodule Fleet.Actors.Brain do
     |> Value.noreply!()
   end
 
-  @impl true
-  def handle_command(
-        {:enqueue_delivery, %Delivery{} = delivery},
-        %Context{state: %State{deliveries: deliveries} = state} = ctx
-      ) do
+  defact enqueue_delivery(
+           %Delivery{} = delivery,
+           %Context{state: %State{deliveries: deliveries} = state} = ctx
+         ) do
     Logger.info(
       "Fleet Brain Controller Received Enqueue Delivery Event. Context: #{inspect(ctx)}"
     )
@@ -73,11 +65,10 @@ defmodule Fleet.Actors.Brain do
     |> Value.noreply!()
   end
 
-  @impl true
-  def handle_command(
-        {:driver_position, %Driver{} = driver},
-        %Context{state: %State{drivers: drivers} = state} = ctx
-      ) do
+  defact driver_position(
+           %Driver{} = driver,
+           %Context{state: %State{drivers: drivers} = state} = ctx
+         ) do
     Logger.info(
       "Fleet Brain Controller Received Driver Position Event. Driver: [#{inspect(driver)}] Context: #{inspect(ctx)}"
     )
