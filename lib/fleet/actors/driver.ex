@@ -2,12 +2,7 @@ defmodule Fleet.Actors.Driver do
   use SpawnSdk.Actor,
     abstract: true,
     channel: "drivers",
-    state_type: Fleet.Domain.Driver,
-    actions: [
-      :init,
-      :update_position,
-      :receive_offer
-    ]
+    state_type: Fleet.Domain.Driver
 
   alias Fleet.Domain.{
     Driver,
